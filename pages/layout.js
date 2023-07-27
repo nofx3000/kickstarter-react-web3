@@ -48,7 +48,7 @@ export default function RootLayout({ children }) {
             ))}
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <Link href={`/newcampaign`}>
+            <Link href={`/campaign/new`}>
               <a
                 href="#"
                 className="text-sm font-semibold leading-6 text-gray-900"
