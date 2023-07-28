@@ -3,6 +3,7 @@ import web3 from "../../ethereum/web3.js";
 import campaign from "../../ethereum/campaign.js";
 import { useEffect, useState } from "react";
 import RootLayout from "../layout.js";
+import Link from "next/link.js";
 
 export default function Detail() {
   const router = useRouter();
@@ -11,6 +12,7 @@ export default function Detail() {
   const currentCampagin = campaign(address);
 
   const [connecting, setConnecting] = useState(false);
+  const [transacting, setTransacting] = useState(false);
   const [minimumContribution, setMinimumContribution] = useState("");
   const [balance, setBalance] = useState("");
   const [requests, setRequests] = useState("");
@@ -49,6 +51,7 @@ export default function Detail() {
   };
 
   const submitContribute = async () => {
+    setTransacting(true);
     try {
       const accounts = await web3.eth.getAccounts();
 
@@ -59,6 +62,8 @@ export default function Detail() {
     } catch (error) {
       console.log(error.toString());
     }
+    fetch();
+    setTransacting(false);
   };
 
   return (
@@ -125,6 +130,21 @@ export default function Detail() {
             >
               Contribute
             </button>
+            {transacting && (
+              <p className="text-2xl tracking-tight text-white sm:text-6xl">
+                transacting.......
+              </p>
+            )}
+          </div>
+          <div className="mx-auto mt-10 max-w-2xl lg:mx-0 lg:max-w-none text-white">
+            <Link href={`/campaign/${address}/requests`}>
+              <button
+                type="submit"
+                className="flex-none rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+              >
+                View Requests
+              </button>
+            </Link>
           </div>
         </div>
       </div>

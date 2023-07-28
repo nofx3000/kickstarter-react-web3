@@ -25,10 +25,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/campaign/[address]": [
+    "/campaign/[address]/requests": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/campaign/[address].js"
+      "static/chunks/pages/campaign/[address]/requests.js"
     ]
   },
   "ampFirstPages": []
