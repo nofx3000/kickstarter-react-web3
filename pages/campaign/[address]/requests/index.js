@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import RootLayout from "../../../layout";
 import campaign from "../../../../ethereum/campaign";
 import { useRouter } from "next/router";
 export default () => {
+  const [requests, setRequests] = useState([]);
   const router = useRouter();
   const { address } = router.query;
   const currentCampagin = campaign(address);
@@ -14,14 +15,14 @@ export default () => {
       await currentCampagin.methods.getRequestsCount().call()
     );
     if (requestCount > 0) {
-      const requests = await Promise.all(
+      const _requests = await Promise.all(
         Array(requestCount)
           .fill()
           .map((item, index) => {
             return currentCampagin.methods.requests(index).call();
           })
       );
-      console.log(requests);
+      setRequests(_requests);
     }
   };
   return (
@@ -43,32 +44,40 @@ export default () => {
           Add Request
         </button>
       </div>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Description</th>
-            <th>Amount</th>
-            <th>Recepient</th>
-            <th>Approval Count</th>
-            <th>Approve</th>
-            <th>Finalize</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+      {requests.length > 0 && (
+        <table className="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Description</th>
+              <th>Amount</th>
+              <th>Recepient</th>
+              <th>Approval Count</th>
+              <th>Approve</th>
+              <th>Finalize</th>
+            </tr>
+          </thead>
+          <tbody>
+            {requests.map((request, index) => (
+              <TableRow id={index} data={request}></TableRow>
+            ))}
+          </tbody>
+        </table>
+      )}
     </RootLayout>
   );
 };
 
-const TableRow = () => {
+const TableRow = ({ data, id }) => {
+  const { approvalCount, complete, description, recipient, value } = data;
   return (
     <tr>
-      <td>Alfreds Futterkiste</td>
-      <td>Maria Anders</td>
-      <td>Germany</td>
-      <td>Germany</td>
-      <td>Germany</td>
+      <td>{id}</td>
+      <td>{description}</td>
+      <td>{parseInt(value)}</td>
+      <td>{recipient.substring(0, 10)}</td>
+      <td>{parseInt(approvalCount)}</td>
+      {/* <td>{complete}</td> */}
       <td>
         <button
           type="submit"
